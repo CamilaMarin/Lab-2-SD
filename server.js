@@ -50,7 +50,7 @@ app.get('/tweet/:number', function(req, res){
 });
 
 //Devuelve la cantidad de tweet que se poseen en la base de datos
-app.get('/tweetCount/', function(req, res){
+app.get('/send1', function(req, res){
 	//console.log('tweetClassifier');
 	var collec = ['tweetList'];
 	var db = require("mongojs").connect(databaseUrl, collec);
@@ -66,7 +66,7 @@ app.get('/tweetCount/', function(req, res){
 
 
 
-//Guardar un tweet en base a un método POST
+
 app.post('/send', function(req, res){
 	console.log('Send Entrada');
 	var entrada = {
@@ -75,46 +75,63 @@ app.post('/send', function(req, res){
   		archivo: req.body.archivo
 	};
 
-var entradaString = JSON.stringify(entrada);
+	var entradaString = JSON.stringify(entrada);
 
-console.log(entradaString);
+	console.log(entradaString);
 
-fs = require('fs'); 
-fs.readFile(req.body.archivo, 'utf8', 
-function(err,datos) {
-	if (err) { 
-		return console.log(err); 
-	}; 
-	var filas = datos.split("\n");
-	filas_servidor =Math.floor(filas.length/req.body.servidores);
-	filas_ultimo_servidor= filas.length -(filas_servidor*(req.body.servidores-1));
-	console.log(filas_ultimo_servidor);
-	console.log(filas_servidor);
-	var max_servidores= (req.body.servidores * 1)+1;
-	var delta =0;
-	for(i=1; i< max_servidores;i++){
-		if (i==max_servidores-1) {
-			for(k=delta; k < filas_ultimo_servidor+delta; k++){
-					var linea = { 
-						id: filas[k], 
-						servidor: i,
-						algoritmo:req.body.ordenamiento
-					}; 
-					console.log(JSON.stringify(linea)); 
+	fs = require('fs'); 
+	fs.readFile(req.body.archivo, 'utf8', 
+	function(err,datos) {
+		if (err) { 
+			return console.log(err); 
+		}; 
+		var filas = datos.split("\n");
+		filas_servidor =Math.floor(filas.length/req.body.servidores);
+		filas_ultimo_servidor= filas.length -(filas_servidor*(req.body.servidores-1));
+		var max_servidores= (req.body.servidores * 1)+1;
+		var delta =0;
+		var arreglo={};
+		for(i=1; i< max_servidores;i++){
+			if (i==max_servidores-1) {
+				for(k=delta; k < filas_ultimo_servidor+delta; k++){
+						var linea = { 
+							id: filas[k], 
+							servidor: i,
+							algoritmo:req.body.ordenamiento
+						}; 
+						console.log(JSON.stringify(linea)); 
+						fs.appendFile('archivos/servidor'+i+'.json', JSON.stringify(linea)+"\n", function (err) {
+  							if (err) throw err;
+						});
+						arreglo[k-delta]=linea;
+				}
+			}
+			else{
+				for(j=delta; j < filas_servidor+delta; j++){
+						var linea = { 
+							id: filas[j], 
+							servidor: i,
+							algoritmo:req.body.ordenamiento
+						}; 
+						console.log(JSON.stringify(linea)); 
+						fs.appendFile('archivos/servidor'+i+'.json', JSON.stringify(linea)+"\n", function (err) {
+  							if (err) throw err;
+						});
+				}
+				delta=delta+filas_servidor;
 			}
 		}
-		else{
-			for(j=delta; j < filas_servidor+delta; j++){
-					var linea = { 
-						id: filas[j], 
-						servidor: i,
-						algoritmo:req.body.ordenamiento
-					}; 
-					console.log(JSON.stringify(linea)); 
-			}
-			delta=delta+filas_servidor;
-		}
-	}
+		console.log(arreglo);
+		// request({ 
+		// 	url: servs[i], 
+		// 	method: "POST", 
+		// 	headers: {'Content-Type': 'application/json'}, 
+		// 	json: true, // <--Very important!!! 
+		// 	body: datos 
+		// }, 
+		// function (error, response, body){ 
+		// 	console.log(response.body); 
+		// });
 
 });
 
