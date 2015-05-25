@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	
-	<title>TSD - Clase #1</title>
+	<title>Laboratorio 2 - SD</title>
 	
 	<script type="text/javascript" src="js/index.js"></script>
   <script type="text/javascript" src="js/jquery.js"></script>
@@ -15,18 +15,36 @@
 
 <body>
   <h1>Web Services</h1>
-  <h2>Formulario para enviar los tweets</h2>
+  <h2>Formulario </h2>
 
-  <!-- Formulario para enviar tweet -->
+  <!-- Formulario para enviar tweet 
   <form action="/send" method="post">
-  	<input name="tweet" type="text" class="form-control" placeholder="Tweet #1 a enviar" required>
-  	<button id="enviar" name="send" type="submit" class="btn btn-primary">Enviar tweet</button>
-  </form>
+  	<input name="tweet" type="text" class="form-control" placeholder="Nombre archivo de entrada" required>
+    <input name="ordenamiento" type="text" class="form-control" placeholder="Tipo de ordenamiento" required>
+    <input name="servidores" type="text" class="form-control" placeholder="Número de servidores" required>
+  	<button id="enviar" name="send" type="submit" class="btn btn-primary">Enviar</button>
+  </form>-->
+
+<form action="/send" method="post">
+  <div class="form-group">
+    <label>Servidores</label>
+    <input name="servidores" type="text" class="form-control" placeholder="Número de servidores"required>
+  </div>
+  <div class="form-group">
+    <label>Tipo de Ordenamiento</label>
+    <input name="ordenamiento" type="text" class="form-control" placeholder="Tipo de ordenamiento" required>
+  </div>
+  <div class="form-group">
+    <label>Archivo de Entrada</label>
+    <input type="file" name="archivo" required>
+  </div>
+  <button id="enviar" name="send" type="submit" class="btn btn-default">Enviar</button>
+</form>
 
   <!-- Mensaje de alerta -->
   <div id="success-alert" class="alert alert-success fade">
     <button type="button" class="close" data-dismiss="alert">&times;</button>
-      ¡Se ha enviado tu tweet correctamente!
+      ¡Se ha enviado la entrada correctamente!
   </div>
   <div class="alert alert-danger hide fade in" role="alert">
    <button type="button" class="close" data-dismiss="alert">&times;</button>

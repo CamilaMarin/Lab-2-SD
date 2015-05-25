@@ -1,4 +1,4 @@
-﻿var port = 8080;
+var port = 8080;
 
 var express = require('express')
   , app = module.exports = express()
@@ -42,7 +42,7 @@ app.get('/tweet/:number', function(req, res){
     	} else {
     		collection.find().skip(parseInt(req.params.number)).limit(1).toArray(function(e, results){
 			    if (e) res.send('Error');
-			    res.send('{"tweet":"'+results[0].tweet+'"}');
+			    res.send('{"tweet":"'+results[0].tweet+" algoritmo :"+results[0].ordenamiento+" servidores :"+results[0].servidores+'"}');
 				db.close();
 		  	})
     	}
@@ -63,25 +63,66 @@ app.get('/tweetCount/', function(req, res){
 	});
 });
 
+
+
+
 //Guardar un tweet en base a un método POST
 app.post('/send', function(req, res){
-	console.log('Send Post');
-	var collec = ['tweetList'];
-	var db = require("mongojs").connect(databaseUrl, collec);
+	console.log('Send Entrada');
+	var entrada = {
+		servidores: req.body.servidores,
+ 		ordenamiento: req.body.ordenamiento,
+  		archivo: req.body.archivo
+	};
 
-	var text = req.body.tweet;
+var entradaString = JSON.stringify(entrada);
 
-	//Submit a la DB
-    db.tweetList.save(
-    	{
-    		tweet: text
-    	}, function(err, saved) {
-		  if( err || !saved ){
-		  	console.log("Tweet don't save");
-		  	res.redirect("/");
-		  } else {
-		  	console.log("Tweet save");
-		  	res.redirect("/");
-		  }
-	});
+console.log(entradaString);
+
+fs = require('fs'); 
+fs.readFile(req.body.archivo, 'utf8', 
+function(err,datos) {
+	if (err) { 
+		return console.log(err); 
+	}; 
+	var filas = datos.split("\n");
+	filas_servidor =Math.floor(filas.length/req.body.servidores);
+	filas_ultimo_servidor= filas.length -(filas_servidor*(req.body.servidores-1));
+	console.log(filas_ultimo_servidor);
+	console.log(filas_servidor);
+	var max_servidores= (req.body.servidores * 1)+1;
+	var delta =0;
+	for(i=1; i< max_servidores;i++){
+		if (i==max_servidores-1) {
+			for(k=delta; k < filas_ultimo_servidor+delta; k++){
+					var cachos = filas[k].split(".");
+					var linea = { 
+						id: cachos[0], 
+						contenido: cachos[1],
+						servidor: i,
+						posicion:k,
+						algoritmo:req.body.ordenamiento
+					}; 
+					console.log(JSON.stringify(linea)); 
+			}
+		}
+		else{
+			for(j=delta; j < filas_servidor+delta; j++){
+					var cachos = filas[j].split(".");
+					var linea = { 
+						id: cachos[0], 
+						contenido: cachos[1],
+						servidor: i,
+						posicion:j,
+						algoritmo:req.body.ordenamiento
+					}; 
+					console.log(JSON.stringify(linea)); 
+			}
+			delta=delta+filas_servidor;
+		}
+	}
+
+});
+
+res.redirect("/");
 });
