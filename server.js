@@ -95,12 +95,9 @@ function(err,datos) {
 	for(i=1; i< max_servidores;i++){
 		if (i==max_servidores-1) {
 			for(k=delta; k < filas_ultimo_servidor+delta; k++){
-					var cachos = filas[k].split(".");
 					var linea = { 
-						id: cachos[0], 
-						contenido: cachos[1],
+						id: filas[k], 
 						servidor: i,
-						posicion:k,
 						algoritmo:req.body.ordenamiento
 					}; 
 					console.log(JSON.stringify(linea)); 
@@ -108,12 +105,9 @@ function(err,datos) {
 		}
 		else{
 			for(j=delta; j < filas_servidor+delta; j++){
-					var cachos = filas[j].split(".");
 					var linea = { 
-						id: cachos[0], 
-						contenido: cachos[1],
+						id: filas[j], 
 						servidor: i,
-						posicion:j,
 						algoritmo:req.body.ordenamiento
 					}; 
 					console.log(JSON.stringify(linea)); 
