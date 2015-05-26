@@ -91,8 +91,9 @@ app.post('/send', function(req, res){
 		filas_ultimo_servidor= filas.length -(filas_servidor*(req.body.servidores-1));
 		var max_servidores= (req.body.servidores * 1)+1;
 		var delta =0;
-		var arreglo={"datos":[]};
+		var arreglo;
 		for(i=1; i< max_servidores;i++){
+			arreglo={"ordenamiento":req.body.ordenamiento,"datos":[]};
 			if (i==max_servidores-1) {
 				for(k=delta; k < filas_ultimo_servidor+delta; k++){
 						//var linea = { 
@@ -105,8 +106,10 @@ app.post('/send', function(req, res){
   						//	if (err) throw err;
 						//});
 						//arreglo[k-delta]=linea;
-						arreglo.datos[k-delta] = {"id":filas[k],"servidor":i,"algoritmo":req.body.ordenamiento};
+						arreglo.datos[k-delta] = {"id":filas[k]};
 				}
+				console.log(" ");
+				console.log("Ultimo");
 				console.log(arreglo);
 				request({ 
 					url: "http://localhost:4567/solve", 
@@ -120,17 +123,22 @@ app.post('/send', function(req, res){
 				});
 			}
 			else{
+				arreglo={"ordenamiento":req.body.ordenamiento,"datos":[]};
 				for(j=delta; j < filas_servidor+delta; j++){
-						var linea = { 
+						/*var linea = { 
 							"id": filas[j], 
 							"servidor": i,
 							"algoritmo":req.body.ordenamiento
-						}; 
-						console.log(JSON.stringify(linea)); 
+						};*/ 
+						//console.log(JSON.stringify(linea)); 
 						//fs.appendFile('archivos/servidor'+i+'.json', JSON.stringify(linea)+"\n", function (err) {
   						//	if (err) throw err;
 						//});
+						arreglo.datos[j-delta] = {"id":filas[j]};
 				}
+				console.log(" ");
+				console.log("Servidores");
+				console.log(arreglo);
 				delta=delta+filas_servidor;
 			}
 		}
