@@ -1,8 +1,14 @@
 require 'rubygems'
 require 'sinatra'
 require 'json'
-require 'open_uri'
 
-get '/' do
-  "Hello, World!"
+require "net/http"
+require "uri"
+
+post '/solve' do 
+
+	request.body.rewind
+  	@datos = JSON.parse request.body.read
+  	puts @datos
+
 end
