@@ -9,6 +9,7 @@ import (
 "strconv"
 "sort"
 "math/rand"
+"bytes"
 )
 
 type Entrada struct { 
@@ -24,12 +25,12 @@ func main() {
     if err != nil {
         log.Fatal(err)
     }
-    fmt.Println(err)
 }
 
 func handler(w http.ResponseWriter, req *http.Request) {
     w.Header().Set("Content-Type", "text/plain")
     w.WriteHeader(http.StatusOK)
+    fmt.Println(req.Proto)
     if req.Method == "POST"{
         body, err := ioutil.ReadAll(req.Body)
          if nil != err {
@@ -67,22 +68,26 @@ func handler(w http.ResponseWriter, req *http.Request) {
         }
         if algoritmo==1 {
             quicksort(sort.Float64Slice(datos))
-            fmt.Println(datos)
         }
         if algoritmo==2 {
             mergeSort(datos)
-            fmt.Println(datos)
         }
         if algoritmo==3 {
             bubblesort(datos)
-            fmt.Println(datos)
         }
         b, err := json.Marshal(datos)
         if err != nil {
             fmt.Println("error:", err)
         }
-        fmt.Fprintln(w, string(b[:]))
-
+        //fmt.Fprintln(w, string(b[:]))
+        contentBuffer := bytes.NewBufferString(string(b[:]))
+        res, err := http.Post ("http://localhost:8080/post", "application/json",contentBuffer)
+        if err != nil {
+            // Request failed.
+            fmt.Println("Error executing HTTP request :", err)
+            return
+        }
+        defer res.Body.Close()
     }
 }
 

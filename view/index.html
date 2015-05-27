@@ -14,46 +14,60 @@
 </head>
 
 <body>
-  <h1>Web Services</h1>
-  <h2>Formulario </h2>
+<div class="container-fluid">
 
-  <!-- Formulario para enviar tweet 
-  <form action="/send" method="post">
-  	<input name="tweet" type="text" class="form-control" placeholder="Nombre archivo de entrada" required>
-    <input name="ordenamiento" type="text" class="form-control" placeholder="Tipo de ordenamiento" required>
-    <input name="servidores" type="text" class="form-control" placeholder="Número de servidores" required>
-  	<button id="enviar" name="send" type="submit" class="btn btn-primary">Enviar</button>
-  </form>-->
+<h2>Sistemas Distribuidos</h2>
+<h3>Laboratorio 2 - REST/SOAP</h3>
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">Formulario</h3>
+  </div>
+  <div class="panel-body">
+    <form action="/send" method="post">
+      <div class="form-group">
+        <label>Servidores</label>
+        <input name="servidores" type="text" class="form-control" width= auto placeholder="Número de servidores"required>
+      </div>
+      <div class="form-group">
+        <label>Tipo de Ordenamiento</label>
+        <select name="ordenamiento" placeholder="Tipo de ordenamiento">
+          <option value="1">Quicksort</option>
+          <option value="2">Mergesort</option>
+          <option value="3">Bubblesort</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Archivo de Entrada</label>
+        <input type="file" name="archivo" required>
+      </div>
+      <button id="enviar" name="send" type="submit" class="btn btn-default">Enviar</button>
+    </form>
+  </div>
+</div>
+  <h4>Código disponible en :</h4>
+  <a class="btn btn-link btn-xs" href="https://github.com/CamilaMarin/Lab-2-SD" role="button">Github</a>
+      <!-- Three columns of text below the carousel -->
+  <h3>Desarrollado por:</h3>
+  <div class="row">
+  <div class="col-lg-4">
+    <img class="img-circle" src="https://scontent-gru1-1.xx.fbcdn.net/hphotos-xpf1/v/l/t1.0-9/11045479_10152767274601135_5155025270389477580_n.jpg?oh=5dee3841969102b0c813a7e6f6397c73&oe=55C00C27" alt="Generic placeholder image" width="140" height="140">
+    <h4>Alexis Casanueva</h4>
+  </div><!-- /.col-lg-4 -->
+  <div class="col-lg-4">
+    <img class="img-circle" src="https://scontent-gru1-1.xx.fbcdn.net/hphotos-frc3/v/t1.0-9/644533_4461269651907_825104326_n.jpg?oh=e1eca32f92bffffefdde6a66fdc01ce0&oe=5603827A" alt="Generic placeholder image" width="140" height="140">
+    <h4>Camila Marín</h4>
+  </div><!-- /.col-lg-4 -->
+  <div class="col-lg-4">
+    <img class="img-circle" src="https://fbcdn-sphotos-d-a.akamaihd.net/hphotos-ak-xfa1/v/t1.0-9/522841_351133101617556_453782700_n.jpg?oh=5311ab0cf58035523c8d833715338a56&oe=55F608BE&__gda__=1438922752_5c74550a9e8a0fe46936e7b33a459f82" alt="Generic placeholder image" width="140" height="140">
+    <h4>Yerko Pino</h4>
+  </div><!-- /.col-lg-4 -->
+  </div><!-- /.row -->
+</div>
 
-<form action="/send" method="post">
-  <div class="form-group">
-    <label>Servidores</label>
-    <input name="servidores" type="text" class="form-control" placeholder="Número de servidores"required>
-  </div>
-  <div class="form-group">
-    <label>Tipo de Ordenamiento</label>
-    <select name="ordenamiento" placeholder="Tipo de ordenamiento">
-      <option value="1">Quicksort</option>
-      <option value="2">Mergesort</option>
-      <option value="3">Bubblesort</option>
-    </select>
-  </div>
-  <div class="form-group">
-    <label>Archivo de Entrada</label>
-    <input type="file" name="archivo" required>
-  </div>
-  <button id="enviar" name="send" type="submit" class="btn btn-default">Enviar</button>
-</form>
-
-  <!-- Mensaje de alerta -->
-  <div id="success-alert" class="alert alert-success fade">
-    <button type="button" class="close" data-dismiss="alert">&times;</button>
-      ¡Se ha enviado la entrada correctamente!
-  </div>
-  <div class="alert alert-danger hide fade in" role="alert">
-   <button type="button" class="close" data-dismiss="alert">&times;</button>
-      <strong>Error!</strong> Ha ocurrido un problema
-  </div>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/bootstrap.min.js"></script>
 
 </body>
 </html>

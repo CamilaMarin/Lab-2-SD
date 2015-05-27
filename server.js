@@ -31,41 +31,10 @@ app.get('/', function(req, res){
 });
 
 //Devuelve el N tweet
-app.get('/tweet/:number', function(req, res){
-	var collec = ['tweetList'];
-	var db = require("mongojs").connect(databaseUrl, collec);
-	var collection = db.collection('tweetList');
-
-	collection.count(function(error, numTweet) {
-    	if(error) res.send('Error connection')
-    	if(req.params.number >= numTweet){
-    		res.send('Error length');
-    	} else {
-    		collection.find().skip(parseInt(req.params.number)).limit(1).toArray(function(e, results){
-			    if (e) res.send('Error');
-			    res.send('{"tweet":"'+results[0].tweet+" algoritmo :"+results[0].ordenamiento+" servidores :"+results[0].servidores+'"}');
-				db.close();
-		  	})
-    	}
-	});
+app.post('/post', function(req, res){
+	console.log("un post");
+	console.log(req.body);
 });
-
-//Devuelve la cantidad de tweet que se poseen en la base de datos
-app.get('/send1', function(req, res){
-	//console.log('tweetClassifier');
-	var collec = ['tweetList'];
-	var db = require("mongojs").connect(databaseUrl, collec);
-	var collection = db.collection('tweetList');
-
-	collection.count(function(error, countTweet) {
-    	if(error) res.send('Error connection');
-    	//console.log(numTweet);
-    	res.send('{"countTweet":"'+countTweet+'"}');
-	});
-});
-
-
-
 
 
 app.post('/send', function(req, res){
@@ -92,6 +61,7 @@ app.post('/send', function(req, res){
 		var max_servidores= (req.body.servidores * 1)+1;
 		var delta =0;
 		var arreglo;
+		var arr_servi= ["http://localhost:4568/solve","http://localhost:8082/","http://localhost:4567/solve"];
 		for(i=1; i< max_servidores;i++){
 			arreglo={"ordenamiento":req.body.ordenamiento,"datos":[]};
 			if (i==max_servidores-1) {
@@ -111,8 +81,9 @@ app.post('/send', function(req, res){
 				console.log(" ");
 				console.log("Ultimo");
 				console.log(arreglo);
+				console.log(arr_servi[i-1]);
 				request({ 
-					url: "http://localhost:4567/solve", 
+					url: arr_servi[i-1], 
 					method: "POST", 
 					headers: {'Content-Type': 'application/json'}, 
 					json: true, // <--Very important!!! 
@@ -139,6 +110,17 @@ app.post('/send', function(req, res){
 				console.log(" ");
 				console.log("Servidores");
 				console.log(arreglo);
+				console.log(arr_servi[i-1]);
+				request({ 
+					url: arr_servi[i-1], 
+					method: "POST", 
+					headers: {'Content-Type': 'application/json'}, 
+					json: true, // <--Very important!!! 
+					body: arreglo
+				}, 
+				function (error, response, body){ 
+					console.log(response.body); 
+				});
 				delta=delta+filas_servidor;
 			}
 		}
