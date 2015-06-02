@@ -9,11 +9,15 @@ import (
 "strconv"
 "sort"
 "math/rand"
-"bytes"
 )
 
 type Entrada struct { 
     Ordenamiento string `json:"ordenamiento"` 
+    Datos []struct { 
+        ID string `json:"id"` 
+    } `json:"datos"` 
+} 
+type Salida struct { 
     Datos []struct { 
         ID string `json:"id"` 
     } `json:"datos"` 
@@ -75,19 +79,23 @@ func handler(w http.ResponseWriter, req *http.Request) {
         if algoritmo==3 {
             bubblesort(datos)
         }
-        b, err := json.Marshal(datos)
+
+        salida := Salida{} 
+        salida_str := make([]string, largo)
+        for j := range datos{
+            salida_str[j] = strconv.FormatFloat(datos[j],'f',20,64)
+        }
+        fmt.Println(len(salida_str))
+        salida.Datos = make([]struct { ID string "json:\"id\"" },largo)
+        fmt.Println(len(salida.Datos))
+        for k := range salida_str{
+            salida.Datos[k].ID = salida_str[k]
+        }
+        b, err := json.Marshal(salida)
         if err != nil {
             fmt.Println("error:", err)
         }
-        //fmt.Fprintln(w, string(b[:]))
-        contentBuffer := bytes.NewBufferString(string(b[:]))
-        res, err := http.Post ("http://localhost:8080/post", "application/json",contentBuffer)
-        if err != nil {
-            // Request failed.
-            fmt.Println("Error executing HTTP request :", err)
-            return
-        }
-        defer res.Body.Close()
+        w.Write(b)
     }
 }
 
