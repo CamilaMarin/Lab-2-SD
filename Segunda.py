@@ -3,33 +3,30 @@ from flask import request
 import json
 app = Flask(__name__)
 
-@app.route('/', methods=[ 'POST'])
+@app.route('/solve', methods=[ 'POST'])
 def hello():
-	print 'hola'
-	entrada=request.data
-	datos=json.loads(entrada)
-	#print str(datos["datos"][0]["id"])
-	arreglo=[]
-	ordenamiento = datos["datos"][1]["algoritmo"]
-	for i in range(len(datos["datos"])):
-	#	print datos["datos"][i]["id"]
-		arreglo.append(datos["datos"][i]["id"])
-	ordenado = arreglo
-	if ordenamiento == "BS":
-		print "Bubble !"
-		ordenado = arreglo
-		bubble_sort(ordenado)
-	elif ordenamiento == "QS":
-		print "Quick !"
-		ordenado = quick_sort(arreglo)
-	elif ordenamiento == "MS":
-		print "Merge !"
-		ordenado = merge_sort(arreglo)
-	else:
-		print "mala entrada"
-	
-	print ordenado
-	return 'holi'
+    print 'hola'
+    entrada=request.data
+    datos=json.loads(entrada)
+    arreglo=[]
+    ordenamiento=datos["ordenamiento"]
+    for i in range(len(datos["datos"])):
+        temp=datos["datos"][i]["id"]
+        arreglo.append(temp)
+    if ordenamiento == '3':
+        print "Bubble !"
+        ordenado = arreglo
+        bubble_sort(ordenado)
+    elif ordenamiento == '1':
+        print "Quick !"
+        ordenado = quick_sort(arreglo)
+    elif ordenamiento == '2':
+        print "Merge !"
+        ordenado = merge_sort(arreglo)
+    else:
+        print "mala entrada"
+    print json.dumps(ordenado)
+    return 'holi'
 
 
 
@@ -57,8 +54,8 @@ def quick_sort(arr):
                 more.append(i)
             else:
                 pivotList.append(i)
-        less = quickSort(less)
-        more = quickSort(more)
+        less = quick_sort(less)
+        more = quick_sort(more)
         return less + pivotList + more
 
 def merge_sort(m):

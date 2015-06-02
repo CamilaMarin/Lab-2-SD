@@ -61,7 +61,7 @@ app.post('/send', function(req, res){
 		var max_servidores= (req.body.servidores * 1)+1;
 		var delta =0;
 		var arreglo;
-		var arr_servi= ["http://localhost:4568/solve","http://localhost:8082/","http://localhost:4567/solve"];
+		var arr_servi= ["http://localhost:8082/solve","http://localhost:4568/solve","http://localhost:4567/solve"];
 		for(i=1; i< max_servidores;i++){
 			arreglo={"ordenamiento":req.body.ordenamiento,"datos":[]};
 			if (i==max_servidores-1) {
