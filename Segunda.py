@@ -1,5 +1,6 @@
 from flask import Flask
 from flask import request
+from decimal import *
 import json
 app = Flask(__name__)
 
@@ -10,7 +11,7 @@ def hello():
     arreglo=[]
     ordenamiento=datos["ordenamiento"]
     for i in range(len(datos["datos"])):
-        temp=float(datos["datos"][i]["id"])
+        temp=Decimal(datos["datos"][i]["id"])
         arreglo.append(temp)
     if ordenamiento == '3':
         print "Bubble !"
@@ -27,7 +28,6 @@ def hello():
     archivo={"datos":[]}
     for i in range(len(ordenado)):
         archivo["datos"].append({'id':str(ordenado[i])})
-    print json.dumps(archivo)
     return json.dumps(archivo)
 
 def bubble_sort(seq):
