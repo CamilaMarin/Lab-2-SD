@@ -5,13 +5,12 @@ app = Flask(__name__)
 
 @app.route('/solve', methods=[ 'POST'])
 def hello():
-    print 'hola'
     entrada=request.data
     datos=json.loads(entrada)
     arreglo=[]
     ordenamiento=datos["ordenamiento"]
     for i in range(len(datos["datos"])):
-        temp=datos["datos"][i]["id"]
+        temp=float(datos["datos"][i]["id"])
         arreglo.append(temp)
     if ordenamiento == '3':
         print "Bubble !"
@@ -25,10 +24,11 @@ def hello():
         ordenado = merge_sort(arreglo)
     else:
         print "mala entrada"
-    print json.dumps(ordenado)
-    return 'holi'
-
-
+    archivo={"datos":[]}
+    for i in range(len(ordenado)):
+        archivo["datos"].append({'id':str(ordenado[i])})
+    print json.dumps(archivo)
+    return json.dumps(archivo)
 
 def bubble_sort(seq):
     changed = True
