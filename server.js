@@ -30,15 +30,8 @@ app.get('/', function(req, res){
 	res.redirect("/view/index.html");
 });
 
-//Devuelve el N tweet
-app.post('/post', function(req, res){
-	console.log("un post");
-	console.log(req.body);
-});
-
 
 app.post('/send', function(req, res){
-	console.log('Send Entrada');
 	var entrada = {
 		servidores: req.body.servidores,
  		ordenamiento: req.body.ordenamiento,
@@ -47,8 +40,7 @@ app.post('/send', function(req, res){
 
 	var entradaString = JSON.stringify(entrada);
 
-	console.log(entradaString);
-
+	var arreglo_salida=[];
 	fs = require('fs'); 
 	fs.readFile(req.body.archivo, 'utf8', 
 	function(err,datos) {
@@ -66,76 +58,91 @@ app.post('/send', function(req, res){
 			arreglo={"ordenamiento":req.body.ordenamiento,"datos":[]};
 			if (i==max_servidores-1) {
 				for(k=delta; k < filas_ultimo_servidor+delta; k++){
-						//var linea = { 
-						//	"id": filas[k], 
-						//	"servidor": i,
-						//	"algoritmo":req.body.ordenamiento
-						//}; 
-						//console.log(JSON.stringify(linea)); 
-						//fs.appendFile('archivos/servidor'+i+'.json', JSON.stringify(linea)+"\n", function (err) {
-  						//	if (err) throw err;
-						//});
-						//arreglo[k-delta]=linea;
 						arreglo.datos[k-delta] = {"id":filas[k]};
 				}
-				console.log(" ");
-				console.log("Ultimo");
-				console.log(arreglo);
-				console.log(arr_servi[i-1]);
+				// console.log(" ");
+				// console.log("Ultimo");
+				// console.log(arreglo);
+				// console.log(arr_servi[i-1]);
 				request({ 
 					url: arr_servi[i-1], 
 					method: "POST", 
 					headers: {'Content-Type': 'application/json'}, 
-					json: true, // <--Very important!!! 
+					json: true, 
 					body: arreglo
 				}, 
 				function (error, response, body){ 
-					console.log(response.body); 
+					for(m=delta; m < filas_ultimo_servidor+delta; m++){
+						arreglo_salida.push(parseFloat(response.body.datos[m-delta].id));
+					}	
+				//MERGE
+				merge_sort(arreglo_salida);
+				//console.log(arreglo_salida);
+				//Escritura del archivo
+				var fsalida = require('fs');
+				for(d=0;d<filas.length;d++){
+					if(d == filas.length-1){
+						fsalida.appendFile('./salida', arreglo_salida[d], function(err) {
+						    if( err ){
+						        console.log( err );
+						    }
+						});
+					}
+					fsalida.appendFile('./salida', arreglo_salida[d]+ '\n', function(err) {
+					    if( err ){
+					        console.log( err );
+					    }
+					});
+				}
+
 				});
+
 			}
 			else{
 				arreglo={"ordenamiento":req.body.ordenamiento,"datos":[]};
 				for(j=delta; j < filas_servidor+delta; j++){
-						/*var linea = { 
-							"id": filas[j], 
-							"servidor": i,
-							"algoritmo":req.body.ordenamiento
-						};*/ 
-						//console.log(JSON.stringify(linea)); 
-						//fs.appendFile('archivos/servidor'+i+'.json', JSON.stringify(linea)+"\n", function (err) {
-  						//	if (err) throw err;
-						//});
 						arreglo.datos[j-delta] = {"id":filas[j]};
 				}
-				console.log(" ");
-				console.log("Servidores");
-				console.log(arreglo);
-				console.log(arr_servi[i-1]);
+				// console.log(" ");
+				// console.log("Servidores");
+				// console.log(arreglo);
+				// console.log(arr_servi[i-1]);
 				request({ 
 					url: arr_servi[i-1], 
 					method: "POST", 
 					headers: {'Content-Type': 'application/json'}, 
-					json: true, // <--Very important!!! 
+					json: true, 
 					body: arreglo
 				}, 
 				function (error, response, body){ 
-					console.log(response.body); 
+					for(l=delta; l < filas_servidor+delta; l++){
+						arreglo_salida.push(parseFloat(response.body.datos[l-delta].id));
+					}
 				});
 				delta=delta+filas_servidor;
 			}
 		}
-		// request({ 
-		// 	url: servs[i], 
-		// 	method: "POST", 
-		// 	headers: {'Content-Type': 'application/json'}, 
-		// 	json: true, // <--Very important!!! 
-		// 	body: datos 
-		// }, 
-		// function (error, response, body){ 
-		// 	console.log(response.body); 
-		// });
-
 });
 
 res.redirect("/");
 });
+
+function merge(left, right, arr) {
+	var a = 0;
+	while (left.length && right.length)
+		arr[a++] = right[0] < left[0] ? right.shift() : left.shift();
+	while (left.length) arr[a++] = left.shift();
+	while (right.length) arr[a++] = right.shift();
+}
+function mSort(arr, tmp, len) {
+	if (len == 1) return;
+	var 	m = Math.floor(len / 2),
+		tmp_l = tmp.slice(0, m),
+		tmp_r = tmp.slice(m);
+	mSort(tmp_l, arr.slice(0, m), m);
+	mSort(tmp_r, arr.slice(m), len - m);
+	merge(tmp_l, tmp_r, arr);
+}
+function merge_sort(arr) {
+	mSort(arr, arr.slice(), arr.length);
+}
