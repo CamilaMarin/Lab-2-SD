@@ -53,7 +53,7 @@ app.post('/send', function(req, res){
 		var max_servidores= (req.body.servidores * 1)+1;
 		var delta =0;
 		var arreglo;
-		var arr_servi= ["http://localhost:8082/solve","http://localhost:4568/solve","http://localhost:4567/solve"];
+		var arr_servi= ["http://localhost:4568/solve","http://158.170.94.93:8085/solve","http://localhost:4568/solve","http://158.170.93.248:4567/solve"];
 		for(i=1; i< max_servidores;i++){
 			arreglo={"ordenamiento":req.body.ordenamiento,"datos":[]};
 			if (i==max_servidores-1) {
@@ -75,26 +75,8 @@ app.post('/send', function(req, res){
 					for(m=delta; m < filas_ultimo_servidor+delta; m++){
 						arreglo_salida.push(parseFloat(response.body.datos[m-delta].id));
 					}	
-				//MERGE
-				merge_sort(arreglo_salida);
-				//console.log(arreglo_salida);
-				//Escritura del archivo
-				var fsalida = require('fs');
-				for(d=0;d<filas.length;d++){
-					if(d == filas.length-1){
-						fsalida.appendFile('./salida', arreglo_salida[d], function(err) {
-						    if( err ){
-						        console.log( err );
-						    }
-						});
-					}
-					fsalida.appendFile('./salida', arreglo_salida[d]+ '\n', function(err) {
-					    if( err ){
-					        console.log( err );
-					    }
-					});
-				}
-
+				
+				console.log(arreglo_salida);
 				});
 
 			}
@@ -118,9 +100,29 @@ app.post('/send', function(req, res){
 					for(l=delta; l < filas_servidor+delta; l++){
 						arreglo_salida.push(parseFloat(response.body.datos[l-delta].id));
 					}
+				console.log(arreglo_salida);
+				merge_sort(arreglo_salida);
+				console.log(arreglo_salida);
+				// //Escritura del archivo
+				// var fsalida = require('fs');
+				// for(d=0;d<filas.length;d++){
+				// 	if(d == filas.length-1){
+				// 		fsalida.appendFile('./salida', arreglo_salida[d], function(err) {
+				// 		    if( err ){
+				// 		        console.log( err );
+				// 		    }
+				// 		});
+				// 	}
+				// 	fsalida.appendFile('./salida', arreglo_salida[d]+ '\n', function(err) {
+				// 	    if( err ){
+				// 	        console.log( err );
+				// 	    }
+				// 	});
+				// }
 				});
 				delta=delta+filas_servidor;
 			}
+
 		}
 });
 
