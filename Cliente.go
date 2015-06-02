@@ -83,7 +83,7 @@ func handler(w http.ResponseWriter, req *http.Request) {
         salida := Salida{} 
         salida_str := make([]string, largo)
         for j := range datos{
-            salida_str[j] = strconv.FormatFloat(datos[j],'f',20,64)
+            salida_str[j] = strconv.FormatFloat(datos[j],'f',-1,64)
         }
         fmt.Println(len(salida_str))
         salida.Datos = make([]struct { ID string "json:\"id\"" },largo)
